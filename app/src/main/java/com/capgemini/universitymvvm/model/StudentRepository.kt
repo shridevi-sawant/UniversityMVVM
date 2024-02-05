@@ -1,6 +1,7 @@
 package com.capgemini.universitymvvm.model
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,13 +27,9 @@ class StudentRepository(val ctx: Context) {
         return isAdded
     }
 
-    suspend fun getStudents(): List<Student> {
+    fun getStudents(): LiveData<List<Student>> {
 
-            val stdListDef = CoroutineScope(Dispatchers.Default).async {
-                stdDao.getAllStudents()
-            }
-
-            return stdListDef.await()
+            return stdDao.getAllStudents()
 
     }
 }

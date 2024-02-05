@@ -1,5 +1,6 @@
 package com.capgemini.universitymvvm.model
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,17 +12,17 @@ import androidx.room.Update
 interface StudentDao {
 
     @Insert
-    fun addStudent(std: Student)
+    suspend fun addStudent(std: Student)
 
     @Delete
-    fun deleteStudent(std: Student)
+    suspend fun deleteStudent(std: Student)
 
     @Query("delete from student where marks < :m ")
-    fun deleteAllStds(m: Int)
+    suspend fun deleteAllStds(m: Int)
 
     @Update
-    fun updateMarks(std: Student)
+    suspend fun updateMarks(std: Student)
 
     @Query("select * from student")
-    fun getAllStudents(): List<Student>
+    fun getAllStudents(): LiveData<List<Student>>
 }

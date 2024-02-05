@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.capgemini.universitymvvm.R
 import com.capgemini.universitymvvm.model.Student
 import com.capgemini.universitymvvm.model.StudentDatabase
 import com.capgemini.universitymvvm.model.StudentRepository
+import com.capgemini.universitymvvm.viewModel.StudentViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +22,7 @@ class AddStudentActivity : AppCompatActivity() {
     lateinit var idEditText: EditText
     lateinit var marksEditText: EditText
 
-    lateinit var repository: StudentRepository
+    lateinit var stdViewModel: StudentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,7 @@ class AddStudentActivity : AppCompatActivity() {
         idEditText = findViewById(R.id.rollE)
         marksEditText = findViewById(R.id.marksE)
 
-        repository = StudentRepository(this)
+        stdViewModel = ViewModelProvider(this)[StudentViewModel::class.java]
     }
 
     fun btnClick(view: View) {
@@ -40,7 +42,7 @@ class AddStudentActivity : AppCompatActivity() {
 
         if (name.isNotEmpty() && rollNo.isNotEmpty() && marks.isNotEmpty()){
            CoroutineScope(Dispatchers.Default).launch {
-               val result = repository.addStudent(name,
+               val result = stdViewModel.addStudent(name,
                    rollNo.toInt(), marks.toInt())
 
                CoroutineScope(Dispatchers.Main).launch {
