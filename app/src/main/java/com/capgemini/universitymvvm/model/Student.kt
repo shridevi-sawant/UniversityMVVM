@@ -7,4 +7,6 @@ import androidx.room.PrimaryKey
 data class Student(
     val name: String,
     @PrimaryKey val id: Int,
-    var marks: Int)
+    var marks: Int,
+
+)

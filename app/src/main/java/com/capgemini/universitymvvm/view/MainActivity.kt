@@ -62,6 +62,10 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, AddStudentActivity::class.java)
                 startActivity(intent)
             }
+            R.id.menu_about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
