@@ -24,6 +24,8 @@ class AddStudentActivity : AppCompatActivity() {
 
     lateinit var stdViewModel: StudentViewModel
 
+    var isAddClicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_student)
@@ -33,32 +35,37 @@ class AddStudentActivity : AppCompatActivity() {
         marksEditText = findViewById(R.id.marksE)
 
         stdViewModel = ViewModelProvider(this)[StudentViewModel::class.java]
+
+        stdViewModel.isStudentAdded.observe(this){
+            if (isAddClicked) {
+                if (it) {
+                    Toast.makeText(
+                        this@AddStudentActivity,
+                        "Student added", Toast.LENGTH_LONG
+                    ).show()
+
+                    finish()
+                } else
+                    Toast.makeText(
+                        this@AddStudentActivity,
+                        "Error: Roll number exists already", Toast.LENGTH_LONG
+                    ).show()
+            }
+        }
     }
 
     fun btnClick(view: View) {
+        isAddClicked = true
         val name = nameEditText.text.toString()
         val rollNo = idEditText.text.toString()
         val marks = marksEditText.text.toString()
 
         if (name.isNotEmpty() && rollNo.isNotEmpty() && marks.isNotEmpty()){
-           CoroutineScope(Dispatchers.Default).launch {
-               val result = stdViewModel.addStudent(name,
+
+             stdViewModel.addStudent(name,
                    rollNo.toInt(), marks.toInt())
 
-               CoroutineScope(Dispatchers.Main).launch {
-                   if (result) {
-                       Toast.makeText(
-                           this@AddStudentActivity,
-                           "Student added", Toast.LENGTH_LONG
-                       ).show()
 
-                       finish()
-                   }
-                   else
-                       Toast.makeText(this@AddStudentActivity,
-                           "Error: Roll number exists already", Toast.LENGTH_LONG).show()
-               }
-           }
         }
         else {
             Snackbar.make(view, "Pls enter all fields..", 5000).show()

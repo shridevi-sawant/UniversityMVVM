@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.capgemini.universitymvvm.R
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity() {
 
         rView = findViewById(R.id.rView)
         rView.layoutManager = LinearLayoutManager(this)
+
+        val touchHelper = ItemTouchHelper(MySwipeCallback())
+        touchHelper.attachToRecyclerView(rView)
 
         // get VM from view model store
         studentVM = ViewModelProvider(this).get(StudentViewModel::class.java)
@@ -60,5 +64,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    inner class MySwipeCallback: ItemTouchHelper.SimpleCallback(0,
+        ItemTouchHelper.RIGHT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            studentVM.deleteStudent(viewHolder.adapterPosition)
+        }
+
     }
 }

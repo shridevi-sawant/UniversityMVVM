@@ -4,8 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.capgemini.universitymvvm.model.Student
 import com.capgemini.universitymvvm.model.StudentRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StudentViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -16,8 +20,21 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
         //MutableLiveData<List<Student>>()
         //listOf<Student>()
 
-    suspend fun addStudent(name: String, id: Int, marks: Int): Boolean {
-        return repo.addStudent(name, id, marks)
+    var isStudentAdded = MutableLiveData<Boolean>(false)
+
+    fun addStudent(name: String, id: Int, marks: Int) {
+        // launch coroutine
+         viewModelScope.launch(Dispatchers.Default) {
+             isStudentAdded.postValue(repo.addStudent(name, id, marks))
+         }
+    }
+
+    fun deleteStudent(position: Int) {
+
+        val stdToDelete = stdList.value!!.get(position)
+        viewModelScope.launch(Dispatchers.Default) {
+            repo.deleteStudent(stdToDelete)
+        }
     }
 
 

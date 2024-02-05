@@ -13,17 +13,12 @@ class StudentRepository(val ctx: Context) {
 
     suspend fun addStudent(name: String, roll: Int, marks: Int ): Boolean{
         var isAdded = false
-        val job = CoroutineScope(Dispatchers.Default).launch {
-            try {
-                stdDao.addStudent(Student(name, roll, marks))
-                isAdded = true
-            }catch (err: Exception){
-                isAdded = false
-
-            }
+        try {
+            stdDao.addStudent(Student(name, roll, marks))
+            isAdded = true
+        } catch (err: Exception) {
+            isAdded = false
         }
-
-        job.join()
         return isAdded
     }
 
@@ -31,5 +26,9 @@ class StudentRepository(val ctx: Context) {
 
             return stdDao.getAllStudents()
 
+    }
+
+    suspend fun deleteStudent(stdToDelete: Student) {
+        stdDao.deleteStudent(stdToDelete)
     }
 }
